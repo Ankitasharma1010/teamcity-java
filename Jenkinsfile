@@ -2,8 +2,10 @@ pipeline {
     agent any
 
     environment {
-        SONARQUBE = 'SonarQube'  // This should match the name of your SonarQube server in Jenkins configuration
+        // SONARQUBE = 'SonarQube'  // This should match the name of your SonarQube server in Jenkins configuration
         // MAVEN_HOME = tool name: 'Maven 3', type: 'Maven'
+        SONARQUBE_SERVER = 'http://50.17.2.124:9000/'
+        SONARQUBE_TOKEN = credentials('SonarQube Authentication Token')
     }
 
     stages {
@@ -26,9 +28,11 @@ pipeline {
 
         stage('SonarQube Analysis') {
             steps {
-                def mvn = tool 'Default Maven';
                 withSonarQubeEnv() {
-                    sh "mvn clean verify sonar:sonar -Dsonar.projectKey=Task -Dsonar.projectName='Task'"
+                    sh "mvn sonar:sonar -Dsonar.projectKey=Task " +
+                        "-Dsonar.projectName='Task' " +
+                        "-Dsonar.host.url=${SONARQUBE_SERVER} " +
+                        "-Dsonar.login=${SONARQUBE_TOKEN}"
                 }
             }
         }

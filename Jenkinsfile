@@ -10,7 +10,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 // Checkout your project code from your repository
-                git ''
+                git 'https://github.com/Ankitasharma1010/teamcity-java.git'
             }
         }
 
@@ -22,12 +22,13 @@ pipeline {
                 }
             }
         }
+       
 
         stage('SonarQube Analysis') {
             steps {
-                script {
-                    // Run SonarQube analysis using the Maven plugin
-                    sh "'${MAVEN_HOME}/bin/mvn' sonar:sonar -Dsonar.projectKey=hello-world -Dsonar.host.url=http://localhost:9000 -Dsonar.login=YOUR_SONARQUBE_TOKEN"
+                def mvn = tool 'Default Maven';
+                withSonarQubeEnv() {
+                    sh "mvn clean verify sonar:sonar -Dsonar.projectKey=Task -Dsonar.projectName='Task'"
                 }
             }
         }

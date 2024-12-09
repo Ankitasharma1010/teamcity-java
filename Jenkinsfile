@@ -28,7 +28,7 @@ pipeline {
 
         stage('SonarQube Analysis') {
             steps {
-                withSonarQubeEnv() {
+                script {
                     sh "mvn sonar:sonar -Dsonar.projectKey=Task " +
                         "-Dsonar.projectName='Task' " +
                         "-Dsonar.host.url=${SONARQUBE_SERVER} " +
